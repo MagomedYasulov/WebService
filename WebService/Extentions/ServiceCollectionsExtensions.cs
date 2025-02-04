@@ -7,6 +7,9 @@ using WebService.Data;
 using WebService.Validators;
 using WebService.Models;
 using Newtonsoft.Json.Serialization;
+using WebService.Abstractions;
+using WebService.Services;
+using WebService.Middlewares;
 
 namespace WebService.Extentions
 {
@@ -71,5 +74,19 @@ namespace WebService.Extentions
 
             return builder;
         }
+
+        public static WebApplicationBuilder AddAppServices(this WebApplicationBuilder builder)
+        {
+            builder.Services.AddScoped<IMessagesService, MessageServie>();
+            return builder;
+        }
+
+        public static WebApplicationBuilder AddExceptionHandler(this WebApplicationBuilder builder)
+        {
+            builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+            builder.Services.AddProblemDetails();
+            return builder;
+        }
+
     }
 }

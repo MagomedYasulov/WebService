@@ -1,5 +1,5 @@
-
 using WebService.Extentions;
+using WebService.Hubs;
 
 namespace WebService
 {
@@ -15,6 +15,9 @@ namespace WebService
             builder.AddSwagger();
             builder.AddFluentValidation();
             builder.AddAutoMapper();
+            builder.AddSignalR();
+            builder.AddExceptionHandler();
+            builder.AddAppServices();
 
             var app = builder.Build();
 
@@ -27,9 +30,10 @@ namespace WebService
 
             app.UseHttpsRedirection();
 
+            app.UseExceptionHandler();
             app.UseAuthorization();
 
-
+            app.MapHub<MessagesHub>("/messages");
             app.MapControllers();
 
             app.Run();
