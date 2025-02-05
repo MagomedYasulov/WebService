@@ -7,8 +7,8 @@ namespace WebService.Validators
     {
         public MessageFilterValidator() 
         {
-            RuleFor(f => f.StartTime).NotEmpty();
-            RuleFor(f => f.EndTime).NotEmpty().GreaterThanOrEqualTo(f => f.StartTime);
+            RuleFor(f => f.StartTime);
+            RuleFor(f => f.EndTime).GreaterThanOrEqualTo(f => f.StartTime).When(f => f.StartTime != null && f.EndTime != null);
         }
     }
 }

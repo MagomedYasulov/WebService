@@ -2,7 +2,7 @@
 {
     public class MessageDto : BaseDto
     {
-        public int Text { get; set; }
+        public string Text { get; set; } = string.Empty;
         public int Number { get; set; }
         public DateTime CreatedAt { get; set; }
     }

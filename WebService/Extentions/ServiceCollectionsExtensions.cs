@@ -18,7 +18,7 @@ namespace WebService.Extentions
         public static WebApplicationBuilder AddData(this WebApplicationBuilder builder)
         {
             builder.Services.AddDbContext<ApplicationContext>(opt =>
-                opt.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+                opt.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))); //opt.UseInMemoryDatabase("WebServiceDb")); //opt.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
             return builder;
         }
 

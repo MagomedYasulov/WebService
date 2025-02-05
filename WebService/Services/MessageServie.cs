@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 using WebService.Abstractions;
 using WebService.Data;
 using WebService.Data.Entites;
@@ -55,7 +56,13 @@ namespace WebService.Services
 
         public async Task<MessageDto[]> Get(MessageFilter filter)
         {
-            var messages = await _context.Messages.AsNoTracking().Where(m => m.CreatedAt >= filter.StartTime && m.CreatedAt <= filter.EndTime).ToArrayAsync();
+            var isStartTime = filter.StartTime == null;
+            var isEndTime = filter.EndTime == null;
+
+            Expression<Func<Message, bool>> exp = r => ((isStartTime || r.CreatedAt >= filter.StartTime) &&
+                                                        (isEndTime || r.CreatedAt <= filter.EndTime));
+
+            var messages = await _context.Messages.AsNoTracking().Where(exp).ToArrayAsync();
             return _mapper.Map<MessageDto[]>(messages);
         }
 
@@ -84,6 +91,8 @@ namespace WebService.Services
 
             _context.Messages.Remove(message);
             await _context.SaveChangesAsync();
+
+            await _messageHub.Clients.All.SendAsync("OnMessageDelete", id);
 
             _logger.LogInformation("Delete message | Id: {Id} | Number {Number}", message.Id, message.Number);
         }

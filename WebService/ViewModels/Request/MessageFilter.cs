@@ -1,8 +1,12 @@
-﻿namespace WebService.ViewModels.Request
+﻿using Microsoft.AspNetCore.Mvc;
+
+namespace WebService.ViewModels.Request
 {
     public class MessageFilter
     {
-        public DateTime StartTime { get; set; }
-        public DateTime EndTime { get; set; }
+        [FromQuery]
+        public DateTime? StartTime { get; set; }
+        [FromQuery]
+        public DateTime? EndTime { get; set; }
     }
 }
