@@ -18,7 +18,7 @@ namespace WebService
             builder.AddSignalR();
             builder.AddExceptionHandler();
             builder.AddAppServices();
-
+            
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -29,6 +29,8 @@ namespace WebService
             }
 
             app.UseHttpsRedirection();
+
+            app.UseStaticFiles();
 
             app.UseExceptionHandler();
             app.UseAuthorization();

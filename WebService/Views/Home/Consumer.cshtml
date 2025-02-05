@@ -1,1 +1,16 @@
 ﻿<h1>Consumer Page</h1>
+
+<script src="~/microsoft/signalr/dist/browser/signalr.js"></script>
+<script>
+    const hubConnection = new signalR.HubConnectionBuilder()
+        .withUrl("/messages")
+        .build();
+
+    hubConnection.on('OnMessageCreate', function (message) {
+
+        console.log(message);
+    });
+
+    hubConnection.start();
+
+</script>

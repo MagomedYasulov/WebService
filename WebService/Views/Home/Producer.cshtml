@@ -1,1 +1,12 @@
 ﻿<h1>Producer Page</h1>
+
+<script src="~/microsoft/signalr/dist/browser/signalr.js"></script>
+<script>
+    const hubConnection = new signalR.HubConnectionBuilder()
+        .withUrl("/messages")
+        .build();
+
+    hubConnection.start();
+
+
+</script>
