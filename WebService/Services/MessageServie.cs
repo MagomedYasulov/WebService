@@ -55,12 +55,12 @@ namespace WebService.Services
         }
 
         public async Task<MessageDto[]> Get(MessageFilter filter)
-        {
-            var isStartTime = filter.StartTime == null;
-            var isEndTime = filter.EndTime == null;
+        {            
+            var isStartTimeNull = filter.StartTime == null;
+            var isEndTimeNull = filter.EndTime == null;
 
-            Expression<Func<Message, bool>> exp = r => ((isStartTime || r.CreatedAt >= filter.StartTime) &&
-                                                        (isEndTime || r.CreatedAt <= filter.EndTime));
+            Expression<Func<Message, bool>> exp = r => ((isStartTimeNull || r.CreatedAt >= filter.StartTime) &&
+                                                        (isEndTimeNull || r.CreatedAt <= filter.EndTime));
 
             var messages = await _context.Messages.AsNoTracking().Where(exp).ToArrayAsync();
             return _mapper.Map<MessageDto[]>(messages);
