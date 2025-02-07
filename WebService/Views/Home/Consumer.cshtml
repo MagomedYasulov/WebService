@@ -1,16 +1,69 @@
-﻿<h1>Consumer Page</h1>
+﻿<link rel="stylesheet" href="~/css/consumer.css">
+<div>
+    <div class="container">
+        <h1>Real-Time Messages</h1>
 
-<script src="~/microsoft/signalr/dist/browser/signalr.js"></script>
-<script>
-    const hubConnection = new signalR.HubConnectionBuilder()
-        .withUrl("/messages")
-        .build();
+        <!-- List of messages -->
+        <div class="messages-list">
+            <h2>Messages</h2>
+            <div id="messages"></div>
+        </div>
+    </div>
 
-    hubConnection.on('OnMessageCreate', function (message) {
+    <!-- Include SignalR library -->
+    <script src="~/microsoft/signalr/dist/browser/signalr.js"></script>
+    <script>
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/messages") // Укажите URL вашего SignalR хаба
+            .configureLogging(signalR.LogLevel.Information)
+            .build();
 
-        console.log(message);
-    });
+        // Function to add or update a message in the list
+        function updateMessage(message) {
+            const messagesContainer = document.getElementById('messages');
+            let messageElement = document.getElementById(`message-${message.id}`);
 
-    hubConnection.start();
+            if (!messageElement) {
+                messageElement = document.createElement('div');
+                messageElement.id = `message-${message.id}`;
+                messageElement.className = 'message-item';
+                messagesContainer.appendChild(messageElement);
+            }
 
-</script>
+            messageElement.innerHTML = `
+                        <h3>Message ID: ${message.id}</h3>
+                        <p>Text: ${message.text}</p>
+                        <p>Number: ${message.number}</p>
+                        <p>Created At: ${message.createdAt}</p>
+                    `;
+        }
+
+        // Function to remove a message from the list
+        function removeMessage(messageId) {
+            const messageElement = document.getElementById(`message-${messageId}`);
+            if (messageElement) {
+                messageElement.remove();
+            }
+        }
+
+        // Start the connection
+        connection.start().then(() => {
+            console.log("SignalR connection established.");
+        }).catch(err => {
+            console.error("SignalR connection error: ", err);
+        });
+
+        // Handle incoming messages
+        connection.on("OnMessageCreate", (message) => {
+            updateMessage(message);
+        });
+
+        connection.on("OnMessageUpdate", (message) => {
+            updateMessage(message);
+        });
+
+        connection.on("OnMessageDelete", (messageId) => {
+            removeMessage(messageId);
+        });
+    </script>
+</div>
