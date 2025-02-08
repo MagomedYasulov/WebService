@@ -20,9 +20,10 @@ namespace WebService
             builder.AddAppServices();
             
             var app = builder.Build();
+            app.MigrateDB();
 
             // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
+            //if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
